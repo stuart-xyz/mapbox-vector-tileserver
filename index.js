@@ -13,6 +13,21 @@ var mercator = new SphericalMercator({
 mapnik.register_default_fonts();
 mapnik.register_default_input_plugins();
 
+function makeVectorTile(opts) {
+  return new Promise((resolve, reject) => {
+    var extent = mercator.bbox(opts.x, opts.y, opts.z, false, '3857');
+    var map = new mapnik.Map(256, 256, '+init=epsg:3857');
+    map.loadSync('layers.xml');
+    map.extent = extent;
+
+    var vectorTile = new mapnik.VectorTile(parseInt(opts.z), parseInt(opts.x), parseInt(opts.y));
+    map.render(vectorTile, function (err, vtile) {
+        if (err) return reject(err);
+        resolve(vectorTile.getData());
+    });
+  });
+}
+
 var app = express();
 app.get('/map/:layerName/:z/:x/:y.pbf', (req, res) => {
     var opts = {
@@ -39,18 +54,3 @@ app.listen(8080, (err) => {
     console.log("Listening on port 8080...");
   }
 });
-
-function makeVectorTile(opts) {
-  var extent = mercator.bbox(opts.x, opts.y, opts.z, false, '3857');
-  var map = new mapnik.Map(256, 256, '+init=epsg:3857');
-  map.loadSync('layers.xml');
-  map.extent = extent;
-
-  return new Promise((resolve, reject) => {
-      var vectorTile = new mapnik.VectorTile(parseInt(opts.z), parseInt(opts.x), parseInt(opts.y));
-      map.render(vectorTile, function (err, vtile) {
-          if (err) return reject(err);
-          resolve(vectorTile.getData());
-      });
-  });
-}
