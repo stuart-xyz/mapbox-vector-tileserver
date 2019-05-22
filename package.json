@@ -1,18 +1,26 @@
 {
   "name": "mapbox-tileserver",
   "version": "1.0.0",
-  "description": "Dynamically generate Mapbox vector tiles from PostGIS using Mapnik Node bindings",
-  "main": "index.js",
+  "description": "Generate Mapbox vector tiles from PostGIS on the fly using Mapnik",
+  "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint",
+    "start": "ts-node app.ts",
+    "lint": "tslint"
   },
   "author": "Stuart Phillips",
   "license": "MIT",
   "dependencies": {
+    "@mapbox/sphericalmercator": "^1.1.0",
+    "dotenv": "^8.0.0",
     "express": "^4.16.2",
-    "mapnik": "^3.6.2",
-    "promise": "^8.0.1",
-    "sphericalmercator": "^1.0.5",
+    "mapnik": "^4.2.1",
     "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   }
 }
